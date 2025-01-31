@@ -44,3 +44,58 @@ public:
         return res;
     }
 };
+
+Optimised using bfs:
+
+class Solution {
+public:
+    vector<int> roww={-1,1,0,0};
+    vector<int> coll={0,0,-1,1};
+    int numEnclaves(vector<vector<int>>& mat) {
+        int n=mat.size();
+        int m=mat[0].size();
+        int res=0;
+        queue<pair<int,int>> q;
+        for(int j=0;j<m;j++){
+            if(mat[0][j]==1) {
+                q.push({0,j});
+                mat[0][j]=2;
+            }
+            if(mat[n-1][j]==1) {
+                q.push({n-1,j});
+                mat[n-1][j]=2;
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(mat[i][0]==1) {
+                q.push({i,0});
+                mat[i][0]=2;
+            }
+            if(mat[i][m-1]==1) {
+                q.push({i,m-1});
+                mat[i][m-1]=2;
+            }
+        }
+        while(!q.empty()){
+            auto [r,c]=q.front();
+            q.pop();
+            for(int k=0;k<4;k++){
+                int nr=r+roww[k];
+                int nc=c+coll[k];
+                if(nr>=0&&nc>=0&&nr<n&&nc<m&&mat[nr][nc]==1){
+                    mat[nr][nc]=2;
+                    q.push({nr,nc});
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(mat[i][j]==1){
+                    res++;
+                } 
+                else mat[i][j]=1;
+            }
+        }
+        return res;
+    }
+};
